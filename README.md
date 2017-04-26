@@ -3,7 +3,7 @@ A Java Swing application showing the relationship between baby names, their gend
 
 The [Baby Names](https://www.kaggle.com/kaggle/us-baby-names) data set found from [Kaggle](https://www.kaggle.com/datasets).
 
-Our goal is to show the relationships between horses and their .
+Our goal is to show the relationships between baby names and their popularity through using a graph. This application will also allow you to add names into the list and search by name.
 
 Collaborators:
   - [Isaac Meisner](https://github.com/ijmeisner)
