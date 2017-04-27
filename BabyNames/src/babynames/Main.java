@@ -6,6 +6,7 @@
 package babynames;
 import babynames.models.Baby;
 import java.io.File;
+import java.io.FileNotFoundException;
 /**
  *
  * @author Titoriano
@@ -16,17 +17,11 @@ public class Main {
    * @param args the command line arguments
    */
   public static void main(String[] args) {
-    // TODO code application logic here
+    // Declares Baby name storage
     Nursery house = new Nursery();
     
-    
-    house.add(new Baby(
-      0,
-      "TJ",
-      1995,
-      'M',
-      173490
-    ));
+    //TODO: Need class for JFrame
+    //Declare JFrame class object Here
     
     BabyCsvReader bcr;
     try {
@@ -34,13 +29,17 @@ public class Main {
       
       Baby current = bcr.readEntry();
       
+      System.out.println("Baby names in the list: "+house.all().size());
+
       while(current != null) {
         house.add(current);
         current = bcr.readEntry();
-        System.out.print(house.all().size());
       }
+      
+      System.out.print("Baby names in the list: "+house.all().size());
+
     }
-    catch(Exception e) {
+    catch(FileNotFoundException e) {
               System.out.print(house.all().size());
 
     } 

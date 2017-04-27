@@ -23,7 +23,7 @@ public class BabyCsvReader {
       System.out.println("The scanner has opened the file!");
     }
     else {
-            System.out.println("The scanner has NOT opened the file!");
+      System.out.println("The scanner has NOT opened the file!");
     }
   }
 
@@ -40,7 +40,6 @@ public class BabyCsvReader {
                                 Integer.parseInt(lineArray[4]) );
           }
           catch(NumberFormatException e) {
-            e.printStackTrace();
             return null;
           }
       }

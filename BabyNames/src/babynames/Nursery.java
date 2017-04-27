@@ -5,12 +5,8 @@
  */
 package babynames;
 
-import babynames.models.Baby;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  *
@@ -20,26 +16,8 @@ import java.util.Scanner;
 public class Nursery<T> {
   ArrayList<T> store;
   
-  public Nursery() {
-    
+  public Nursery() {    
     store = new ArrayList<>();
-    /*
-    try (Scanner scanner = new Scanner(new File("./Pokemon.csv"))) {
-        while(scanner.hasNextLine()) {
-          String line = scanner.nextLine();
-          String[] lineArray = line.split(",");
-          try{
-          store.add(new Baby (  Integer.parseInt(lineArray[0]),
-                                lineArray[1],
-                                Integer.parseInt(lineArray[2]),
-                                lineArray[3].charAt(0),
-                                Integer.parseInt(lineArray[4]) ));
-          }
-          catch(Exception e){
-            
-          }
-      }
-    }*/
   }
   
   
@@ -58,8 +36,6 @@ public class Nursery<T> {
     return store.get(index);
   }
   
-  // Baby foo = (Baby) Store.get(0);
-
   public List all() {
     return store;
   }
