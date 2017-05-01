@@ -26,7 +26,6 @@ public class BabyCsvReader {
       System.out.println("The scanner has NOT opened the file!");
     }
   }
-
   public Baby readEntry() {
     try {
       if(sc.hasNextLine()) {

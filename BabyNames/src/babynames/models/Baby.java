@@ -24,6 +24,16 @@ public class Baby {
     this.count = count;
   }
   
+  public String getBaby(){
+    String baby = "" 
+    +"    ID: "+this.getId()+"\n"
+    +"  Name: "+this.getName()+"\n"
+    +"  Year: "+this.getYear()+"\n"
+    +"Gender: "+this.getGender()+"\n"
+    +" Count: "+this.getCount()+"\n";
+    
+    return baby;
+  }
   public int getId(){
     return this.id;
   }
