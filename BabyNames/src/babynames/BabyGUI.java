@@ -14,6 +14,7 @@ import org.jfree.chart.*;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import javax.swing.JRadioButton;
 
 /**
  *
@@ -30,12 +31,7 @@ public class BabyGUI {
      foo = house;
       prepareGUI();
    }
-   /*
-   public static void main(String[] args){
-      BabyGUI  babyGUI = new BabyGUI();      
-      babyGUI.showTextFieldDemo();
-   }
-*/
+
    private void prepareGUI(){
       mainFrame = new JFrame("CSC 420 Group Project");
       mainFrame.setSize(600,600);
@@ -58,16 +54,46 @@ public class BabyGUI {
       mainFrame.setVisible(true);  
    }
    void showTextFieldDemo(){
-      headerLabel.setText("Baby Names"); 
+      headerLabel.setText("Baby Names");
+      String maleString = "M";
+      String femaleString = "F";
 
       JLabel  name1Label= new JLabel("Name 1", JLabel.RIGHT);
       JLabel  name2Label = new JLabel("Name 2", JLabel.CENTER);
+     
       final JTextField name1Text = new JTextField(6);
-      final JTextField name2Text = new JTextField(6);      
+      
+      JRadioButton male1Button = new JRadioButton(maleString);
+      male1Button.setMnemonic(KeyEvent.VK_M);
+      male1Button.setActionCommand(maleString);
+      
+      JRadioButton female1Button = new JRadioButton(femaleString);
+      female1Button.setMnemonic(KeyEvent.VK_F);
+      female1Button.setActionCommand(femaleString);
+      
+      ButtonGroup group1 = new ButtonGroup();
+      group1.add(male1Button);
+      group1.add(female1Button);
+      
+      final JTextField name2Text = new JTextField(6);
+      JRadioButton male2Button = new JRadioButton(maleString);
+      male2Button.setMnemonic(KeyEvent.VK_M);
+      male2Button.setActionCommand(maleString);
+      
+      JRadioButton female2Button = new JRadioButton(femaleString);
+      female2Button.setMnemonic(KeyEvent.VK_F);
+      female2Button.setActionCommand(femaleString);
+      
+      ButtonGroup group2 = new ButtonGroup();
+      group2.add(male2Button);
+      group2.add(female2Button);
+      
 
       JButton compareButton = new JButton("Compare");
       compareButton.addActionListener((ActionEvent e) -> {
-          XYDataset dataset = createDataset(foo, name1Text.getText(), name2Text.getText());
+          String gender1 = group1.getSelection().getActionCommand();
+          String gender2 = group2.getSelection().getActionCommand();
+          XYDataset dataset = createDataset(foo, name1Text.getText(), gender1, name2Text.getText(), gender2);
           JPanel chartPanelFoo = createChartPanel(dataset);
           chartPanelFoo.setPreferredSize(new java.awt.Dimension(700, 900));
           mainFrame.add(chartPanelFoo);
@@ -75,8 +101,12 @@ public class BabyGUI {
       }); 
       controlPanel.add(name1Label);
       controlPanel.add(name1Text);
+      controlPanel.add(male1Button);
+      controlPanel.add(female1Button);
       controlPanel.add(name2Label);       
       controlPanel.add(name2Text);
+      controlPanel.add(male2Button);
+      controlPanel.add(female2Button);
       controlPanel.add(compareButton);
       mainFrame.setVisible(true);  
    }
@@ -92,16 +122,22 @@ public class BabyGUI {
         return new ChartPanel(chart);
     }
    
-   private XYDataset createDataset(ArrayList<Baby> foo, String name1, String name2) {
+   private XYDataset createDataset(ArrayList<Baby> foo, String name1, String gender1, String name2, String gender2) {
         XYSeriesCollection dataset = new XYSeriesCollection();
         XYSeries series1 = new XYSeries(name1);
         XYSeries series2 = new XYSeries(name2);
+        boolean isName1, isName2, isGender1, isGender2;
+        
         
         for(int i=0; i < foo.size(); i++){
-          if(name1.equals(foo.get(i).getName())){
+          isName1 = name1.equals(foo.get(i).getName());
+          isGender1 = gender1.equals(foo.get(i).getGender());
+          isName2 = name2.equals(foo.get(i).getName());
+          isGender2 = gender2.equals(foo.get(i).getGender());
+         
+          if(isName1 && isGender1){
             series1.add(foo.get(i).getYear(), foo.get(i).getCount());
-            System.out.println(foo.get(i).getYear());
-          } else if(name2.equals(foo.get(i).getName())){
+          } else if(isName2 && isGender2){
             series2.add(foo.get(i).getYear(), foo.get(i).getCount());
           }
         }

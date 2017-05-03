@@ -35,7 +35,7 @@ public class BabyCsvReader {
             return new Baby (  Integer.parseInt(lineArray[0]),
                                 lineArray[1],
                                 Integer.parseInt(lineArray[2]),
-                                lineArray[3].charAt(0),
+                                lineArray[3],
                                 Integer.parseInt(lineArray[4]) );
           }
           catch(NumberFormatException e) {

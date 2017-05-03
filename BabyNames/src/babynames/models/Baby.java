@@ -13,10 +13,10 @@ public class Baby {
   private int id;
   private String name;
   private int year;
-  private char gender;
+  private String gender;
   private int count;
   
-  public Baby(int id, String name, int year, char gender, int count) {
+  public Baby(int id, String name, int year, String gender, int count) {
     this.id = id;
     this.name = name;
     this.year = year;
@@ -55,10 +55,10 @@ public class Baby {
     this.year = year;
   }
   
-  public char getGender(){
+  public String getGender(){
     return this.gender;
   }
-  public void setGender(char gender){
+  public void setGender(String gender){
     this.gender = gender;
   }
   
