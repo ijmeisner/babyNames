@@ -37,7 +37,7 @@ public class Main {
     catch(FileNotFoundException e) {
       System.out.println(house.size());
     }
-    int index = 0;
+    int index = 9;
     System.out.println(house.get(index).getBaby()); 
     
     //getAll(house);
@@ -47,11 +47,23 @@ public class Main {
         **or**
       Change contents
       house.get(index0.setName(Name);
+    
+    Cool Loop
+    for( Baby baby: house){
+     
+    }
     */
+    
+    //GUI
+    BabyGUI  babyGUI = new BabyGUI(house);      
+    babyGUI.showTextFieldDemo();
+    
   }
   public static void getAll(ArrayList<Baby> house){
     for (int i=0; i < house.size(); i++){
       System.out.println(house.get(i).getBaby()); 
     }
   }
+  
+  
 }
