@@ -19,13 +19,15 @@ public class Main {
   ArrayList<Baby> house = new ArrayList<>();
 
   public static void main(String[] args) {
-    // TODO: Add jframe and GUI Functionallity 
     
     // Declares Baby name storage    
     ArrayList<Baby> house = new ArrayList<>();
     BabyCsvReader bcr;
+    String fileName = "./names.csv";
+    File babyFile=null;
     try {
-      bcr = new BabyCsvReader(new File("./names.csv"));
+      babyFile = new File(fileName);
+      bcr = new BabyCsvReader(babyFile);
       Baby current = bcr.readEntry();
       System.out.println("Baby names in the list: "+house.size());
       while(current != null) {
@@ -37,25 +39,9 @@ public class Main {
     catch(FileNotFoundException e) {
       System.out.println(house.size());
     }
-    int index = 9;
-    System.out.println(house.get(index).getBaby()); 
-    
-    //getAll(house);
-    /*
-      Similarily you can do the following to get specific elements of object
-      house.get(index).getName();
-        **or**
-      Change contents
-      house.get(index0.setName(Name);
-    
-    Cool Loop
-    for( Baby baby: house){
-     
-    }
-    */
     
     //GUI
-    BabyGUI  babyGUI = new BabyGUI(house);      
+    BabyGUI  babyGUI = new BabyGUI(house, babyFile);      
     babyGUI.showTextFieldDemo();
     
   }
