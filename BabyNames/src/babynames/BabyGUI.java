@@ -8,9 +8,7 @@ package babynames;
 import babynames.models.Baby;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,15 +28,16 @@ import javax.swing.JRadioButton;
 
 public class BabyGUI {
    private JFrame mainFrame;
-   private JPanel mainPanel;
-   private JPanel babyEntryPanel;
-   private JPanel babyEntryTitle;
+   private JPanel rightPanel;
+   private JPanel leftPanel;
    private JPanel babyEntryForm;
-   private JLabel headerLabel;
    private JPanel controlPanel;
    private JPanel chartPanel;
+   private JPanel stuff;
+   private int height;
+   private int width;
    private final ArrayList<Baby> foo;
-   private File fileName;
+   private final File fileName;
 
    public BabyGUI(ArrayList<Baby> house, File babyFile){
      this.foo = house;
@@ -48,7 +47,10 @@ public class BabyGUI {
 
    private void prepareGUI(){
       mainFrame = new JFrame("CSC 420 Group Project");
-      mainFrame.setSize(900,700);
+      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+      width = (int) screenSize.getWidth();
+      height = (int) screenSize.getHeight();
+      mainFrame.setSize(width,height);
       mainFrame.setLayout(new GridLayout(1, 2));
       
       mainFrame.addWindowListener(new WindowAdapter() {
@@ -57,37 +59,53 @@ public class BabyGUI {
             System.exit(0);
          }        
       });
-      mainPanel = new JPanel();
-      babyEntryPanel = new JPanel();
-      babyEntryForm = new JPanel();
-      babyEntryTitle = new JPanel();
-      chartPanel = new JPanel();
+      leftPanel = new JPanel();
+      JLabel leftTitle = new JLabel("Compare Two Baby Names", JLabel.CENTER);
+      rightPanel = new JPanel();
+      JLabel rightTitle = new JLabel("Add a Baby to the Dataset", JLabel.CENTER);
       
-      mainPanel.setLayout     (new GridLayout(3,1));
-      babyEntryPanel.setLayout(new GridLayout(3,1));
-      babyEntryForm.setLayout(new FlowLayout());
+      leftPanel.setLayout(new GridLayout(3,1));
+      rightPanel.setLayout(new GridLayout(3,1));
       
+            
+      Color leftColor = new Color(255,182,193);
+      Color rightColor = new Color(173,216,230);
       
-      headerLabel = new JLabel("", JLabel.CENTER);        
-
+      leftPanel.setBackground(leftColor);
+      rightPanel.setBackground(rightColor);
+      
       controlPanel = new JPanel();
       controlPanel.setLayout(new FlowLayout());
+      controlPanel.setBackground(leftColor);
+      chartPanel = new JPanel();
+      chartPanel.setLayout(new FlowLayout());
+      chartPanel.setBackground(leftColor);
+      
+      babyEntryForm = new JPanel();
+      babyEntryForm.setLayout(new FlowLayout());
+      babyEntryForm.setBackground(rightColor);
+      stuff = new JPanel();
+      stuff.setLayout(new FlowLayout());
+      stuff.setBackground(rightColor);
+      leftPanel.add(leftTitle);
+      rightPanel.add(rightTitle);
+      
+      leftPanel.add(controlPanel);
+      leftPanel.add(chartPanel);
+      rightPanel.add(babyEntryForm);
+      rightPanel.add(stuff);
 
-      //mainFrame.add(headerLabel);
-      mainFrame.add(controlPanel);
-      mainFrame.add(babyEntryPanel);
-      babyEntryPanel.add(babyEntryTitle);
-      babyEntryPanel.add(babyEntryForm);
+      mainFrame.add(leftPanel);
+      mainFrame.add(rightPanel);
  
       mainFrame.setVisible(true);  
    }
    void showTextFieldDemo(){
-      headerLabel.setText("Baby Names");
       String maleString = "M";
       String femaleString = "F";
 
-      JLabel  name1Label= new JLabel("Name 1", JLabel.RIGHT);
-      JLabel  name2Label = new JLabel("Name 2", JLabel.CENTER);
+      JLabel  name1Label= new JLabel("Name 1:", JLabel.RIGHT);
+      JLabel  name2Label = new JLabel("Name 2:", JLabel.CENTER);
      
       final JTextField name1Text = new JTextField(6);
       
@@ -123,15 +141,15 @@ public class BabyGUI {
           String gender2 = group2.getSelection().getActionCommand();
           XYDataset dataset = createDataset(foo, name1Text.getText(), gender1, name2Text.getText(), gender2);
           JPanel chartPanelFoo = createChartPanel(dataset);
-          chartPanelFoo.setPreferredSize(new java.awt.Dimension(350, 450));
+          chartPanelFoo.setPreferredSize(new java.awt.Dimension((this.width/2)-8, (this.height/3)-35));
           chartPanel.removeAll();
           chartPanel.add(chartPanelFoo);
           mainFrame.setVisible(true);
       }); 
-      JLabel  babyEntryName = new JLabel("Baby Name", JLabel.RIGHT);
+      JLabel  babyEntryName = new JLabel("Baby Name:", JLabel.RIGHT);
       final JTextField babyEntryText = new JTextField(6);
       
-      JLabel babyEntryGender = new JLabel("Gender", JLabel.RIGHT);
+      JLabel babyEntryGender = new JLabel("Gender:", JLabel.RIGHT);
       JRadioButton maleEntry = new JRadioButton(maleString);
       maleEntry.setMnemonic(KeyEvent.VK_M);
       maleEntry.setActionCommand(maleString);
@@ -144,42 +162,39 @@ public class BabyGUI {
       entryGroup.add(maleEntry);
       entryGroup.add(femaleEntry);
       
-      JLabel  babyEntryYear = new JLabel("Year", JLabel.RIGHT);
+      JLabel  babyEntryYear = new JLabel("Year:", JLabel.RIGHT);
       final JTextField babyEntryTextYear = new JTextField(6);
-      JLabel  babyEntryCount = new JLabel("Count", JLabel.RIGHT);
+      JLabel  babyEntryCount = new JLabel("Count:", JLabel.RIGHT);
       final JTextField babyEntryTextCount = new JTextField(6);
       
       JButton addButton = new JButton("Add");
-      addButton.addActionListener((ActionEvent e) -> {
-          int nextId = foo.size() + 1;
-          
-          foo.add (new Baby(nextId, 
-                            babyEntryText.getText(), 
-                            Integer.parseInt(babyEntryTextYear.getText()),
-                            entryGroup.getSelection().getActionCommand(),
-                            Integer.parseInt(babyEntryTextCount.getText())));
-          
-          String babyObjStr = nextId + "," +
-                            babyEntryText.getText()+ "," +
-                            Integer.parseInt(babyEntryTextYear.getText())+ "," +
-                            entryGroup.getSelection().getActionCommand()+ "," +
-                            Integer.parseInt(babyEntryTextCount.getText());
-          System.out.println(babyObjStr);
-          
-          try {
-              FileWriter writer = new FileWriter(this.fileName,true);
-              BufferedWriter bw = new BufferedWriter(writer);
-              bw.write(babyObjStr);
-              System.out.println("Baby names in the list: "+ foo.size());
+      addButton.addActionListener(new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              int nextId = foo.size() + 1;
+              foo.add (new Baby(nextId,
+                      babyEntryText.getText(),
+                      Integer.parseInt(babyEntryTextYear.getText()),
+                      entryGroup.getSelection().getActionCommand(),
+                      Integer.parseInt(babyEntryTextCount.getText())));
+              String babyObjStr = nextId + "," +
+                      babyEntryText.getText()+ "," +
+                      Integer.parseInt(babyEntryTextYear.getText())+ "," +
+                      entryGroup.getSelection().getActionCommand()+ "," +
+                      Integer.parseInt(babyEntryTextCount.getText()) + "\n";
+              System.out.println(babyObjStr);
+              try {
+                  FileWriter writer = new FileWriter(BabyGUI.this.fileName, true);
+                  writer.append(babyObjStr);
+                  writer.flush();
+                  writer.close();
+                  System.out.println("Baby names in the list: "+ foo.size());
+              }catch (IOException ex) {
+                  Logger.getLogger(BabyGUI.class.getName()).log(Level.SEVERE, null, ex);
+              }   System.out.print(foo.get(nextId-1).getBaby());
           }
-          catch (IOException ex) {
-            Logger.getLogger(BabyGUI.class.getName()).log(Level.SEVERE, null, ex);
-          }
-
-          System.out.print(foo.get(nextId-1).getBaby());
       }); 
       
-      //controlPanel.setSize(700, 700);
       controlPanel.add(name1Label);
       controlPanel.add(name1Text);
       controlPanel.add(male1Button);
@@ -189,9 +204,7 @@ public class BabyGUI {
       controlPanel.add(male2Button);
       controlPanel.add(female2Button);
       controlPanel.add(compareButton);
-      controlPanel.add(chartPanel);
       
-      //babyEntryPanel.setSize(200,700);
       babyEntryForm.add(babyEntryName);
       babyEntryForm.add(babyEntryText);
       babyEntryForm.add(babyEntryGender);
@@ -202,13 +215,12 @@ public class BabyGUI {
       babyEntryForm.add(babyEntryCount);
       babyEntryForm.add(babyEntryTextCount);
       babyEntryForm.add(addButton);
-     
       
       mainFrame.setVisible(true);  
    }
    
    private JPanel createChartPanel(XYDataset dataset) {
-        String chartTitle = "Baby Names";
+        String chartTitle = "Baby Name Comparison";
         String xAxisLabel = "Year";
         String yAxisLabel = "Count";
 
@@ -220,8 +232,8 @@ public class BabyGUI {
    
    private XYDataset createDataset(ArrayList<Baby> foo, String name1, String gender1, String name2, String gender2) {
         XYSeriesCollection dataset = new XYSeriesCollection();
-        XYSeries series1 = new XYSeries(name1);
-        XYSeries series2 = new XYSeries(name2);
+        XYSeries series1 = new XYSeries(name1 + " " + gender1);
+        XYSeries series2 = new XYSeries(name2 + " " + gender2);
         boolean isName1, isName2, isGender1, isGender2;
         
         
@@ -233,7 +245,8 @@ public class BabyGUI {
          
           if(isName1 && isGender1){
             series1.add(foo.get(i).getYear(), foo.get(i).getCount());
-          } else if(isName2 && isGender2){
+          }
+          if(isName2 && isGender2){
             series2.add(foo.get(i).getYear(), foo.get(i).getCount());
           }
         }
@@ -243,8 +256,4 @@ public class BabyGUI {
         
         return dataset;
     }
-
-  private void addBabyName(String text, String actionCommand) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
 }
