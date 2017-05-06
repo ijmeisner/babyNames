@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package babynames;
 
 import babynames.models.Baby;
@@ -19,7 +14,6 @@ public class BabyCsvReader {
   public BabyCsvReader(File file) throws FileNotFoundException {
     sc = new Scanner(file);
     if(sc.hasNext()) {
-      
       System.out.println("The scanner has opened the file!");
     }
     else {

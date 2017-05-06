@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package babynames;
 
 import babynames.models.Baby;
@@ -28,21 +23,19 @@ import javax.swing.JRadioButton;
 
 public class BabyGUI {
    private JFrame mainFrame;
-   private JPanel rightPanel;
-   private JPanel leftPanel;
-   private JPanel babyEntryForm;
-   private JPanel controlPanel;
-   private JPanel chartPanel;
-   private JPanel stuff;
-   private int height;
-   private int width;
+   private JPanel rightPanel, leftPanel, babyEntryForm, controlPanel, chartPanel, stuff;
+   private int height, width;
    private final ArrayList<Baby> foo;
    private final File fileName;
+   private final String maleString;
+   private final String femaleString;
 
    public BabyGUI(ArrayList<Baby> house, File babyFile){
      this.foo = house;
      this.fileName = babyFile;
-      prepareGUI();
+     this.maleString = "M";
+     this.femaleString = "F";
+     prepareGUI();
    }
 
    private void prepareGUI(){
@@ -59,50 +52,15 @@ public class BabyGUI {
             System.exit(0);
          }        
       });
-      leftPanel = new JPanel();
-      JLabel leftTitle = new JLabel("Compare Two Baby Names", JLabel.CENTER);
-      rightPanel = new JPanel();
-      JLabel rightTitle = new JLabel("Add a Baby to the Dataset", JLabel.CENTER);
       
-      leftPanel.setLayout(new GridLayout(3,1));
-      rightPanel.setLayout(new GridLayout(3,1));
-      
-            
-      Color leftColor = new Color(255,182,193);
-      Color rightColor = new Color(173,216,230);
-      
-      leftPanel.setBackground(leftColor);
-      rightPanel.setBackground(rightColor);
-      
-      controlPanel = new JPanel();
-      controlPanel.setLayout(new FlowLayout());
-      controlPanel.setBackground(leftColor);
-      chartPanel = new JPanel();
-      chartPanel.setLayout(new FlowLayout());
-      chartPanel.setBackground(leftColor);
-      
-      babyEntryForm = new JPanel();
-      babyEntryForm.setLayout(new FlowLayout());
-      babyEntryForm.setBackground(rightColor);
-      stuff = new JPanel();
-      stuff.setLayout(new FlowLayout());
-      stuff.setBackground(rightColor);
-      leftPanel.add(leftTitle);
-      rightPanel.add(rightTitle);
-      
-      leftPanel.add(controlPanel);
-      leftPanel.add(chartPanel);
-      rightPanel.add(babyEntryForm);
-      rightPanel.add(stuff);
-
-      mainFrame.add(leftPanel);
-      mainFrame.add(rightPanel);
- 
+      addPanels();
       mainFrame.setVisible(true);  
    }
-   void showTextFieldDemo(){
-      String maleString = "M";
-      String femaleString = "F";
+   
+   // This method creates and adds all the components for comparing two baby names
+   // to the left panel of the JFrame. When the compare button is pressed, the line
+   // chart is generated.
+   void setControlPanel(){
 
       JLabel  name1Label= new JLabel("Name 1:", JLabel.RIGHT);
       JLabel  name2Label = new JLabel("Name 2:", JLabel.CENTER);
@@ -134,22 +92,41 @@ public class BabyGUI {
       group2.add(male2Button);
       group2.add(female2Button);
       
-
       JButton compareButton = new JButton("Compare");
       compareButton.addActionListener((ActionEvent e) -> {
           String gender1 = group1.getSelection().getActionCommand();
           String gender2 = group2.getSelection().getActionCommand();
+          
           XYDataset dataset = createDataset(foo, name1Text.getText(), gender1, name2Text.getText(), gender2);
+          
           JPanel chartPanelFoo = createChartPanel(dataset);
           chartPanelFoo.setPreferredSize(new java.awt.Dimension((this.width/2)-8, (this.height/3)-35));
           chartPanel.removeAll();
           chartPanel.add(chartPanelFoo);
+          
           mainFrame.setVisible(true);
-      }); 
+      });
+      controlPanel.add(name1Label);
+      controlPanel.add(name1Text);
+      controlPanel.add(male1Button);
+      controlPanel.add(female1Button);
+      controlPanel.add(name2Label);       
+      controlPanel.add(name2Text);
+      controlPanel.add(male2Button);
+      controlPanel.add(female2Button);
+      controlPanel.add(compareButton);
+      mainFrame.setVisible(true);
+   }
+   
+   // This method creates and adds all the components to the right panel of the
+   // JFrame for adding data into our dataset. When the 'add' button is pressed,
+   // the entry is appended to the CSV.
+   void setBabyEntryForm(){
       JLabel  babyEntryName = new JLabel("Baby Name:", JLabel.RIGHT);
       final JTextField babyEntryText = new JTextField(6);
       
       JLabel babyEntryGender = new JLabel("Gender:", JLabel.RIGHT);
+      
       JRadioButton maleEntry = new JRadioButton(maleString);
       maleEntry.setMnemonic(KeyEvent.VK_M);
       maleEntry.setActionCommand(maleString);
@@ -177,33 +154,23 @@ public class BabyGUI {
                       Integer.parseInt(babyEntryTextYear.getText()),
                       entryGroup.getSelection().getActionCommand(),
                       Integer.parseInt(babyEntryTextCount.getText())));
+              
               String babyObjStr = nextId + "," +
                       babyEntryText.getText()+ "," +
                       Integer.parseInt(babyEntryTextYear.getText())+ "," +
                       entryGroup.getSelection().getActionCommand()+ "," +
                       Integer.parseInt(babyEntryTextCount.getText()) + "\n";
-              System.out.println(babyObjStr);
+              
               try {
                   FileWriter writer = new FileWriter(BabyGUI.this.fileName, true);
                   writer.append(babyObjStr);
                   writer.flush();
                   writer.close();
-                  System.out.println("Baby names in the list: "+ foo.size());
               }catch (IOException ex) {
                   Logger.getLogger(BabyGUI.class.getName()).log(Level.SEVERE, null, ex);
-              }   System.out.print(foo.get(nextId-1).getBaby());
+              }
           }
-      }); 
-      
-      controlPanel.add(name1Label);
-      controlPanel.add(name1Text);
-      controlPanel.add(male1Button);
-      controlPanel.add(female1Button);
-      controlPanel.add(name2Label);       
-      controlPanel.add(name2Text);
-      controlPanel.add(male2Button);
-      controlPanel.add(female2Button);
-      controlPanel.add(compareButton);
+      });
       
       babyEntryForm.add(babyEntryName);
       babyEntryForm.add(babyEntryText);
@@ -219,6 +186,8 @@ public class BabyGUI {
       mainFrame.setVisible(true);  
    }
    
+   // This method returns the line graph which is generated using the 
+   // JFreeChart Library.
    private JPanel createChartPanel(XYDataset dataset) {
         String chartTitle = "Baby Name Comparison";
         String xAxisLabel = "Year";
@@ -230,12 +199,14 @@ public class BabyGUI {
         return new ChartPanel(chart);
     }
    
+   // This method returns the XYDataset in which the JFreeChart method uses to create
+   // the line graph. Each entry in the ArrayList is tested and if it matches the
+   // selected names, it is added to the dataset.
    private XYDataset createDataset(ArrayList<Baby> foo, String name1, String gender1, String name2, String gender2) {
         XYSeriesCollection dataset = new XYSeriesCollection();
         XYSeries series1 = new XYSeries(name1 + " " + gender1);
         XYSeries series2 = new XYSeries(name2 + " " + gender2);
         boolean isName1, isName2, isGender1, isGender2;
-        
         
         for(int i=0; i < foo.size(); i++){
           isName1 = name1.equals(foo.get(i).getName());
@@ -255,5 +226,48 @@ public class BabyGUI {
         dataset.addSeries(series2);
         
         return dataset;
+    }
+
+    // This method creates and adds the components of both the right and left panels
+    // to the main JFrame.
+    private void addPanels() {
+      leftPanel = new JPanel();
+      JLabel leftTitle = new JLabel("Compare Two Baby Names", JLabel.CENTER);
+      rightPanel = new JPanel();
+      JLabel rightTitle = new JLabel("Add a Baby to the Dataset", JLabel.CENTER);
+      
+      leftPanel.setLayout(new GridLayout(3,1));
+      rightPanel.setLayout(new GridLayout(3,1));
+            
+      Color leftColor = new Color(255,182,193);
+      Color rightColor = new Color(173,216,230);
+      
+      leftPanel.setBackground(leftColor);
+      rightPanel.setBackground(rightColor);
+      
+      controlPanel = new JPanel();
+      controlPanel.setLayout(new FlowLayout());
+      controlPanel.setBackground(leftColor);
+      chartPanel = new JPanel();
+      chartPanel.setLayout(new FlowLayout());
+      chartPanel.setBackground(leftColor);
+      
+      babyEntryForm = new JPanel();
+      babyEntryForm.setLayout(new FlowLayout());
+      babyEntryForm.setBackground(rightColor);
+      
+      stuff = new JPanel();
+      stuff.setLayout(new FlowLayout());
+      stuff.setBackground(rightColor);
+      
+      leftPanel.add(leftTitle);
+      leftPanel.add(controlPanel);
+      leftPanel.add(chartPanel);
+      rightPanel.add(rightTitle);
+      rightPanel.add(babyEntryForm);
+      rightPanel.add(stuff);
+
+      mainFrame.add(leftPanel);
+      mainFrame.add(rightPanel);
     }
 }

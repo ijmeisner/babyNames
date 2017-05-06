@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package babynames;
 import babynames.models.Baby;
 import java.io.File;
@@ -19,7 +14,6 @@ public class Main {
   ArrayList<Baby> house = new ArrayList<>();
 
   public static void main(String[] args) {
-    
     // Declares Baby name storage    
     ArrayList<Baby> house = new ArrayList<>();
     BabyCsvReader bcr;
@@ -40,16 +34,14 @@ public class Main {
       System.out.println(house.size());
     }
     
-    //GUI
+    //GUI set up
     BabyGUI  babyGUI = new BabyGUI(house, babyFile);      
-    babyGUI.showTextFieldDemo();
-    
+    babyGUI.setControlPanel();
+    babyGUI.setBabyEntryForm();
   }
   public static void getAll(ArrayList<Baby> house){
     for (int i=0; i < house.size(); i++){
       System.out.println(house.get(i).getBaby()); 
     }
   }
-  
-  
 }

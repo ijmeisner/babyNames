@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package babynames.models;
 
 /**
@@ -10,11 +5,8 @@ package babynames.models;
  * @author Titoriano
  */
 public class Baby {
-  private int id;
-  private String name;
-  private int year;
-  private String gender;
-  private int count;
+  private int id, year, count;
+  private String name, gender;
   
   public Baby(int id, String name, int year, String gender, int count) {
     this.id = id;
